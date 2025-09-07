@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador PAES - Competencia Matemática 1</title>
+    <style>
+        :root {
+            --primary: #1a5276;
+            --secondary: #2e86c1;
+            --accent: #34495e;
+            --light: #ffffff;
+            --dark: #000000;
+            --blue-light: #3498db;
+            --blue-dark: #1a5276;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --gray-light: #f5f5f5;
+            --gray: #bdc3c7;
+            --gray-dark: #7f8c8d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--blue-dark), var(--blue-light));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: var(--blue-dark);
+            margin-right: 15px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .instructions {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--gray);
+        }
+        
+        .instructions h2 {
+            color: var(--blue-dark);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--blue-light);
+            padding-bottom: 10px;
+        }
+        
+        .instructions-list {
+            list-style-type: none;
+        }
+        
+        .instructions-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .instructions-list li:before {
+            content: "•";
+            color: var(--blue-light);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .test-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--light);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--gray);
+        }
+        
+        .timer-container {
+            display: flex;
+            align-items: center;
+            background-color: var(--gray-light);
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+        
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--blue-dark);
+            margin-left: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--blue-dark);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--blue-light);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray-light);
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--gray);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .test-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+        
+        .question-container {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+            border: 1px solid var(--gray);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .question-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--blue-dark);
+        }
+        
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            padding: 15px;
+            border: 2px solid var(--gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            border-color: var(--blue-light);
+            background-color: var(--gray-light);
+        }
+        
+        .option.selected {
+            border-color: var(--blue-light);
+            background-color: #e8f4fc;
+        }
+        
+        .option-label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: var(--blue-dark);
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        
+        .sidebar {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            border: 1px solid var(--gray);
+        }
+        
+        .sidebar h3 {
+            color: var(--blue-dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .question-btn {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--gray-light);
+            border: 1px solid var(--gray);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .question-btn:hover {
+            background-color: var(--gray);
+        }
+        
+        .question-btn.current {
+            background-color: var(--blue-light);
+            color: white;
+            border-color: var(--blue-light);
+        }
+        
+        .question-btn.answered {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--gray-light);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .results-container {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+            border: 1px solid var(--gray);
+        }
+        
+        .results-container h2 {
+            color: var(--blue-dark);
+            margin-bottom: 20px;
+        }
+        
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--blue-light);
+            margin: 20px 0;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--blue-dark);
+        }
+        
+        .stat-label {
+            color: var(--gray-dark);
+        }
+        
+        .review-btn {
+            margin-top: 20px;
+        }
+        
+        /* Chat de IA */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 450px;
+            background-color: var(--light);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--gray);
+            z-index: 1000;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background-color: var(--blue-dark);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+        
+        .chat-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .message {
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .message.user {
+            background-color: var(--blue-light);
+            color: white;
+            align-self: flex-end;
+        }
+        
+        .message.bot {
+            background-color: var(--gray-light);
+            color: var(--dark);
+            align-self: flex-start;
+        }
+        
+        .chat-input-container {
+            padding: 15px;
+            border-top: 1px solid var(--gray);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: 6px;
+            outline: none;
+        }
+        
+        .chat-send {
+            background-color: var(--blue-dark);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        
+        .chat-minimized {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--blue-dark);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--gray-dark);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .test-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .question-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .chat-container {
+                width: 300px;
+                right: 10px;
+                bottom: 10px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .test-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .question-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .chat-container {
+                width: 100%;
+                right: 0;
+                bottom: 0;
+                border-radius: 0;
+                height: 100%;
+            }
+            
+            .chat-minimized {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">PAES</div>
+                <div>
+                    <h1>Simulador PAES - Competencia Matemática 1</h1>
+                    <p class="subtitle">Forma 111 - Proceso de Admisión 2025</p>
+                </div>
+            </div>
+        </header>
+        
+        <div class="instructions">
+            <h2>Instrucciones</h2>
+            <ul class="instructions-list">
+                <li>Esta prueba contiene 65 preguntas, pero solo 60 serán consideradas para el cálculo del puntaje final.</li>
+                <li>Cada pregunta tiene 4 opciones de respuesta (A, B, C y D), donde solo una es correcta.</li>
+                <li>Dispones de 2 horas y 20 minutos para responder las preguntas.</li>
+                <li>No se descuenta puntaje por respuestas erradas.</li>
+                <li>Puedes navegar entre preguntas y marcar tus respuestas. Al finalizar, podrás ver tu puntaje.</li>
+            </ul>
+        </div>
+        
+        <div class="test-controls">
+            <div class="timer-container">
+                <span>Tiempo restante:</span>
+                <div class="timer" id="timer">02:20:00</div>
+            </div>
+            <div>
+                <button class="btn btn-primary" id="startBtn">Iniciar simulacro</button>
+                <button class="btn btn-success" id="finishBtn" disabled>Finalizar prueba</button>
+            </div>
+        </div>
+        
+        <div class="test-content">
+            <div class="main-content">
+                <div class="question-container">
+                    <div class="question-header">
+                        <div class="question-number">Pregunta <span id="current-number">1</span> de 65</div>
+                        <div class="question-status" id="question-status">Sin responder</div>
+                    </div>
+                    
+                    <div class="question-text" id="question-text">
+                        Selecciona "Iniciar simulacro" para comenzar con la prueba.
+                    </div>
+                    
+                    <div class="options-container" id="options-container">
+                        <!-- Las opciones se cargarán dinámicamente -->
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button class="btn btn-secondary" id="prevBtn" disabled>Anterior</button>
+                        <button class="btn btn-secondary" id="nextBtn">Siguiente</button>
+                    </div>
+                </div>
+                
+                <div class="results-container" id="results-container">
+                    <h2>Resultados del Simulacro</h2>
+                    <p>Has completado la prueba de Competencia Matemática 1</p>
+                    <div class="score" id="score">0/65</div>
+                    
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-number" id="correct-answers">0</div>
+                            <div class="stat-label">Correctas</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="incorrect-answers">0</div>
+                            <div class="stat-label">Incorrectas</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="unanswered">65</div>
+                            <div class="stat-label">Sin responder</div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary review-btn" id="reviewBtn">Revisar respuestas</button>
+                    <button class="btn btn-secondary" id="restartBtn">Intentar de nuevo</button>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h3>Navegación de preguntas</h3>
+                <div class="question-grid" id="question-grid">
+                    <!-- Los botones de preguntas se generarán dinámicamente -->
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span>Progreso</span>
+                        <span id="progress-text">0/65</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-warning" id="markBtn">Marcar para revisar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat de IA (inicialmente minimizado) -->
+    <div class="chat-minimized" id="chatMinimized">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </div>
+
+    <div class="chat-container" id="chatContainer" style="display: none;">
+        <div class="chat-header">
+            <h3>Asistente PAES - IA</h3>
+            <button class="chat-toggle" id="chatToggle">−</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                ¡Hola! Soy tu asistente de IA para la PAES. ¿En qué puedo ayudarte con tus estudios o con esta prueba?
+            </div>
+        </div>
+        <div class="chat-input-container">
+            <textarea class="chat-input" id="chatInput" placeholder="Escribe tu pregunta... (Enter = enviar, Shift+Enter = nueva línea)"></textarea>
+            <button class="chat-send" id="chatSend">Enviar</button>
+        </div>
+    </div>
+
+    <!-- MathJax para LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['$$', '$$'], ['\\[', '\\]']]},
+            svg: {fontCache: 'global'}
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+    <!-- math.js para evaluación segura -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.js"></script>
+
+    <script>
+        // ----------------------------
+        // Banco completo: 65 preguntas
+        // ----------------------------
+        const allQuestions = [
+            {
+                number: 1,
+                text: "¿Cuál es el valor de \\( 5 - (-2)(-2 - 7) \\)?",
+                options: [
+                    { id: "A", text: "-63" },
+                    { id: "B", text: "-13" },
+                    { id: "C", text: "-5" },
+                    { id: "D", text: "8" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 2,
+                text: "¿Cuántos números enteros positivos son mayores o iguales que \\(-4\\) y menores que \\(3\\)?",
+                options: [
+                    { id: "A", text: "2" },
+                    { id: "B", text: "3" },
+                    { id: "C", text: "4" },
+                    { id: "D", text: "6" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 3,
+                text: "¿Cuál es el resultado de \\(\\left( \\frac{3}{8} - \\frac{6}{16} \\right) - \\frac{8}{3}\\)?",
+                options: [
+                    { id: "A", text: "\\( -\\frac{11}{3} \\)" },
+                    { id: "B", text: "-3" },
+                    { id: "C", text: "\\( \\frac{11}{3} \\)" },
+                    { id: "D", text: "3" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 4,
+                text: "¿Cuál de las siguientes desigualdades asegura que al multiplicar \\(\\frac{11}{6}\\) por \\(\\frac{2}{3}\\) se obtiene un número menor que \\(\\frac{11}{6}\\)?",
+                options: [
+                    { id: "A", text: "Que \\( \\frac{2}{3} < \\frac{11}{6} \\)" },
+                    { id: "B", text: "Que \\( \\frac{2}{3} < 1 \\)" },
+                    { id: "C", text: "Que \\( 3 < 6 \\)" },
+                    { id: "D", text: "Que \\( 2 < 11 \\)" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 5,
+                text: "En la tabla adjunta se presenta el tiempo que demoraron los corredores de una competencia en llegar a la meta. ¿Cuáles de los corredores llegaron después de Mario?",
+                options: [
+                    { id: "A", text: "Pedro y Arturo" },
+                    { id: "B", text: "Juan, Roberto, Pedro y Arturo" },
+                    { id: "C", text: "Juan y Pedro" },
+                    { id: "D", text: "Ninguno de los corredores" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 6,
+                text: "Un juego consiste en lanzar cinco bolitas hacia los agujeros de una caja. Las bolitas ingresaron por los tres agujeros. ¿Cuál de los siguientes puntajes corresponde al máximo puntaje que pudo haber obtenido la persona?",
+                options: [
+                    { id: "A", text: "5" },
+                    { id: "B", text: "11" },
+                    { id: "C", text: "19" },
+                    { id: "D", text: "25" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 7,
+                text: "En una infografía se presenta el pronóstico del tiempo para cierto día. ¿Cuál será la variación de temperatura entre las 17:00 y las 21:00 horas?",
+                options: [
+                    { id: "A", text: "-6 °C" },
+                    { id: "B", text: "-5 °C" },
+                    { id: "C", text: "4 °C" },
+                    { id: "D", text: "6 °C" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 8,
+                text: "Considera la siguiente secuencia de figuras. Si el patrón de formación se mantiene, ¿cuántos círculos forman la Figura 7?",
+                options: [
+                    { id: "A", text: "18" },
+                    { id: "B", text: "21" },
+                    { id: "C", text: "28" },
+                    { id: "D", text: "36" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 9,
+                text: "Una persona compró tres cuartos kilogramos de paltas, un kilogramo y medio de naranjas y medio kilogramo de duraznos. ¿Cuál de las siguientes expresiones representa lo que gastó la persona?",
+                options: [
+                    { id: "A", text: "\\( 0,75 \\cdot \\$5000 + 1,2 \\cdot \\$1100 + 0,2 \\cdot \\$1300 \\)" },
+                    { id: "B", text: "\\( 0,75 \\cdot \\$5000 + 1,5 \\cdot \\$1100 + 0,5 \\cdot \\$1300 \\)" },
+                    { id: "C", text: "\\( 3,4 \\cdot \\$5000 + 1,2 \\cdot \\$1100 + 0,2 \\cdot \\$1300 \\)" },
+                    { id: "D", text: "\\( 3,4 \\cdot \\$5000 + 1,5 \\cdot \\$1100 + 0,5 \\cdot \\$1300 \\)" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 10,
+                text: "En un local se vende un sándwich con dos trozos de carne de un cuarto de libra cada uno. Considera que una libra equivale a 453,6 g, ¿cuál es la masa total de los dos trozos de carne?",
+                options: [
+                    { id: "A", text: "907,2 g" },
+                    { id: "B", text: "453,6 g" },
+                    { id: "C", text: "226,8 g" },
+                    { id: "D", text: "113,4 g" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 11,
+                text: "Para transformar una distancia medida en millas a centímetros, se utiliza la ecuación \\( C = 160 934 \\cdot x \\). Si un kilómetro es equivalente a 100 000 centímetros, ¿cuántos kilómetros son dos millas?",
+                options: [
+                    { id: "A", text: "32 186 800 000 kilómetros" },
+                    { id: "B", text: "80 467 kilómetros" },
+                    { id: "C", text: "3,21868 kilómetros" },
+                    { id: "D", text: "0,80467 kilómetros" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 12,
+                text: "¿Cuál es el 15 % de 60000?",
+                options: [
+                    { id: "A", text: "400" },
+                    { id: "B", text: "900" },
+                    { id: "C", text: "4000" },
+                    { id: "D", text: "9000" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 13,
+                text: "En una tienda se vendieron 20 patitos de goma en un día. Si al día siguiente la cantidad de patitos vendidos aumentó en un 5 %, ¿cuántos patitos se vendieron ese día?",
+                options: [
+                    { id: "A", text: "21" },
+                    { id: "B", text: "24" },
+                    { id: "C", text: "25" },
+                    { id: "D", text: "30" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 14,
+                text: "En una infografía se presentan los porcentajes de los distintos tipos de agua que hay en la Tierra. ¿Cuál de las siguientes afirmaciones es verdadera?",
+                options: [
+                    { id: "A", text: "Un 69,7 % del agua en el planeta está en los glaciares." },
+                    { id: "B", text: "La mayor reserva de agua dulce en el planeta se encuentra en los glaciares." },
+                    { id: "C", text: "Para determinar el porcentaje de agua que consume el ser humano de los ríos, se debe realizar la operación \\( 0,007 \\cdot 0,3 \\)." },
+                    { id: "D", text: "Hay más agua disponible en glaciares y acuíferos, en conjunto, que agua salada." }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 15,
+                text: "Según datos del INE, se estima que en cuántos puntos porcentuales aumentará la población de 60 años o más del 2022 al 2050?",
+                options: [
+                    { id: "A", text: "14,0" },
+                    { id: "B", text: "27,6" },
+                    { id: "C", text: "41,6" },
+                    { id: "D", text: "50,2" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 16,
+                text: "En cierto país, en abril de 2021 el IPC fue de 110 y en abril de 2022 fue de 121, ¿cuál fue la tasa de inflación anual en el periodo descrito?",
+                options: [
+                    { id: "A", text: "11 %" },
+                    { id: "B", text: "10 %" },
+                    { id: "C", text: "9 %" },
+                    { id: "D", text: "2,1 %" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 17,
+                text: "¿Cuál de los siguientes argumentos justifica que la división entre \\( 2^8 \\) y \\( 2^4 \\) da como resultado un número par?",
+                options: [
+                    { id: "A", text: "Que las bases son múltiplos de 2 e iguales y que el cociente entre los exponentes 8 y 4 es un número par." },
+                    { id: "B", text: "Que la suma de ambas bases es un número par y que la suma de ambos exponentes es un número par." },
+                    { id: "C", text: "Que la suma de ambas bases es un número entero y que el cociente entre los exponentes 8 y 4 es un número par." },
+                    { id: "D", text: "Que las bases son múltiplos de 2 e iguales y que la resta entre ambos exponentes es un número entero positivo." }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 18,
+                text: "Según un estudio, la cantidad C de individuos de cierta población se modela mediante la expresión \\( C = 2000 \\cdot 1,1^t \\). ¿En qué porcentaje aumenta la población de individuos cada hora?",
+                options: [
+                    { id: "A", text: "En un 1%" },
+                    { id: "B", text: "En un 1,1%" },
+                    { id: "C", text: "En un 10 %" },
+                    { id: "D", text: "En un 11 %" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 19,
+                text: "¿Cuál es el valor de \\( 1^0 + 2^3 \\)?",
+                options: [
+                    { id: "A", text: "9" },
+                    { id: "B", text: "8" },
+                    { id: "C", text: "7" },
+                    { id: "D", text: "6" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 20,
+                text: "¿Cuál de las siguientes expresiones representa una descomposición del número 12 056?",
+                options: [
+                    { id: "A", text: "\\( 1 \\cdot 10^3 + 2 \\cdot 10^2 + 5 \\cdot 10^1 + 6 \\cdot 10^0 \\)" },
+                    { id: "B", text: "\\( 1 \\cdot 10^4 + 2 \\cdot 10^3 + 5 \\cdot 10^2 + 6 \\cdot 10^1 \\)" },
+                    { id: "C", text: "\\( 1 \\cdot 10^4 + 2 \\cdot 10^3 + 5 \\cdot 10^1 + 6 \\cdot 10^0 \\)" },
+                    { id: "D", text: "\\( 1 \\cdot 10^5 + 2 \\cdot 10^4 + 5 \\cdot 10^2 + 6 \\cdot 10^1 \\)" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 21,
+                text: "Sultán es un perro de tamaño mediano que llegó a una familia cuando tenía 6 meses de vida, y lo tienen hace 5 años. ¿Cuál será su edad equivalente a un ser humano dentro de dos años y medio?",
+                options: [
+                    { id: "A", text: "45 años" },
+                    { id: "B", text: "60 años" },
+                    { id: "C", text: "63 años" },
+                    { id: "D", text: "85 años" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 22,
+                text: "Diariamente una persona reparte frutas en su camioneta a siete almacenes, durante los siete días de la semana. Si cada día reparte siete cajas a cada almacén con siete kilogramos de frutas cada una, ¿cuál es el total de kilogramos de fruta que reparte en una semana?",
+                options: [
+                    { id: "A", text: "\\( 7^3 \\)" },
+                    { id: "B", text: "\\( 3^7 \\)" },
+                    { id: "C", text: "\\( 7^4 \\)" },
+                    { id: "D", text: "\\( 4^7 \\)" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 23,
+                text: "Una constructora tiene un plan de construcción a cuatro años. Transcurridos x años de empezada la obra, tienen construidos \\( 2 \\cdot 2^x \\) edificios. ¿Cuántos edificios se tiene planificado construir en total transcurridos esos cuatro años?",
+                options: [
+                    { id: "A", text: "16" },
+                    { id: "B", text: "32" },
+                    { id: "C", text: "60" },
+                    { id: "D", text: "256" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 24,
+                text: "¿Cuál de las siguientes expresiones es igual a \\( x^2 + 5x - 6 \\)?",
+                options: [
+                    { id: "A", text: "\\( (x + 1)(x - 6) \\)" },
+                    { id: "B", text: "\\( (x + 6)(x - 1) \\)" },
+                    { id: "C", text: "\\( (x + 2)(x + 3) \\)" },
+                    { id: "D", text: "\\( (x - 2)(x - 3) \\)" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 25,
+                text: "¿Cuál de las siguientes expresiones es igual a \\(\\frac{1}{2}(-b-(b-2)+2)\\)?",
+                options: [
+                    { id: "A", text: "0" },
+                    { id: "B", text: "2" },
+                    { id: "C", text: "\\(-b\\)" },
+                    { id: "D", text: "\\(-b+2\\)" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 26,
+                text: "A un paciente de 83 kg se le debe administrar una dosis de 0,05 g de medicamento por cada kilogramo de masa corporal. ¿Cuántos gramos de medicamento se le deben administrar al paciente?",
+                options: [
+                    { id: "A", text: "1,66 g" },
+                    { id: "B", text: "4,15 g" },
+                    { id: "C", text: "166 g" },
+                    { id: "D", text: "415 g" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 27,
+                text: "Una huincha utilizada en construcción tiene dos unidades de medida distintas. Si la longitud de un objeto es x pulgadas, ¿cuál de las siguientes expresiones representa aproximadamente su longitud en centímetros?",
+                options: [
+                    { id: "A", text: "\\( \\frac{5,1}{2} x \\)" },
+                    { id: "B", text: "\\( \\frac{2}{5,1} x \\)" },
+                    { id: "C", text: "\\( x + 3,1 \\)" },
+                    { id: "D", text: "\\( x - 3,1 \\)" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 28,
+                text: "Si la bomba de infusión se programó para administrar 600 ml de suero con una rapidez de 1200 ml/h, ¿cuánto tiempo durará ese suministro?",
+                options: [
+                    { id: "A", text: "5 minutos" },
+                    { id: "B", text: "20 minutos" },
+                    { id: "C", text: "30 minutos" },
+                    { id: "D", text: "50 minutos" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 29,
+                text: "Se coloca un cuadro en una pared. ¿Cuál es el valor de x?",
+                options: [
+                    { id: "A", text: "30" },
+                    { id: "B", text: "60" },
+                    { id: "C", text: "120" },
+                    { id: "D", text: "150" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 30,
+                text: "La fórmula de Euler establece que para cierto tipo de poliedros se cumple la relación C + V = A + 2. Si un poliedro con 8 vértices y 18 aristas cumple con la fórmula de Euler, ¿cuántas caras tiene?",
+                options: [
+                    { id: "A", text: "12" },
+                    { id: "B", text: "14" },
+                    { id: "C", text: "24" },
+                    { id: "D", text: "28" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 31,
+                text: "De acuerdo con la ley de Blondel, la relación ideal entre la medida de la huella H y la medida de la contrahuella C está dada por la ecuación H + 2C = 64. Si la huella de una escalera mide 30 cm, ¿cuánto debe medir su contrahuella?",
+                options: [
+                    { id: "A", text: "4 cm" },
+                    { id: "B", text: "8 cm" },
+                    { id: "C", text: "15 cm" },
+                    { id: "D", text: "17 cm" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 32,
+                text: "¿Cuál es la solución de la ecuación 3 - 2x = 7?",
+                options: [
+                    { id: "A", text: "-10" },
+                    { id: "B", text: "-5" },
+                    { id: "C", text: "-4" },
+                    { id: "D", text: "-2" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 33,
+                text: "Cuatro personas deciden aportar con dinero a un fondo común. Si lo aportado por las cuatro personas se representa por x y Carla aportó $150 000, ¿cuál de las siguientes ecuaciones tiene como solución el total del dinero aportado al fondo?",
+                options: [
+                    { id: "A", text: "\\( \\frac{1}{2} x + \\frac{1}{4} x + \\frac{1}{10} x + \\frac{3}{20} x = 150 000 \\)" },
+                    { id: "B", text: "\\( \\frac{1}{2} + \\frac{1}{4} + \\frac{1}{10} + 150 000 \\cdot \\frac{3}{20} = x \\)" },
+                    { id: "C", text: "\\( \\frac{1}{2} x + \\frac{1}{4} x + \\frac{1}{10} x + 150 000 = x \\)" },
+                    { id: "D", text: "\\( \\frac{1}{2} + \\frac{1}{4} + \\frac{1}{10} + 150 000 = x \\)" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 34,
+                text: "Una persona tiene $100 000 en 30 billetes, algunos de $2000 y el resto de $10 000. ¿Cuántos billetes más tiene de $2000 que de $10 000?",
+                options: [
+                    { id: "A", text: "15" },
+                    { id: "B", text: "20" },
+                    { id: "C", text: "30" },
+                    { id: "D", text: "40" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 35,
+                text: "En el gráfico se representa la cantidad de kilómetros recorridos por cuatro vehículos en función de la cantidad de litros de bencina que consumen. ¿Cuál de los vehículos tiene mayor rendimiento?",
+                options: [
+                    { id: "A", text: "V₁" },
+                    { id: "B", text: "V₂" },
+                    { id: "C", text: "V₃" },
+                    { id: "D", text: "V₄" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 36,
+                text: "Considera el siguiente sistema de ecuaciones: 2x + y = 6, 4x + 3y = 12. ¿Cuál es la solución del sistema?",
+                options: [
+                    { id: "A", text: "x = 15 ; y = -24" },
+                    { id: "B", text: "x = -9 ; y = 24" },
+                    { id: "C", text: "x = 3 ; y = 0" },
+                    { id: "D", text: "x = 3 ; y = 12" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 37,
+                text: "En una academia hay 120 personas, entre hombres y mujeres. La cantidad de hombres es a la cantidad de mujeres como 1 es a 3. ¿Cuántas mujeres hay en la academia?",
+                options: [
+                    { id: "A", text: "30" },
+                    { id: "B", text: "40" },
+                    { id: "C", text: "60" },
+                    { id: "D", text: "90" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 38,
+                text: "Una persona abre por la mañana una caja de leche de un litro y se sirve en un vaso hasta los 250 ml. Por la tarde, se sirve 300 ml y por la noche utiliza 350 ml para preparar un postre. ¿Cuál de los siguientes gráficos representa de mejor manera la cantidad de leche que queda en la caja?",
+                options: [
+                    { id: "A", text: "Gráfico A" },
+                    { id: "B", text: "Gráfico B" },
+                    { id: "C", text: "Gráfico C" },
+                    { id: "D", text: "Gráfico D" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 39,
+                text: "Gola y Colón son empresas de gasfitería con distintas modalidades de cobro. Colón cobra un 30 % menos por visita domiciliaria y un 20 % más por hora en relación con lo que cobra Gola. ¿Cuál de las siguientes funciones modela el cobro que realiza Colón?",
+                options: [
+                    { id: "A", text: "k(t) = 9990 + 15 000 t" },
+                    { id: "B", text: "g(t) = 9970 + 15 020 t" },
+                    { id: "C", text: "h(t) = 7000 + 18 000 t" },
+                    { id: "D", text: "j(t) = 12 000 + 10 500 t" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 40,
+                text: "Dos estacionamientos cobran en función de la cantidad x de minutos. Estacionamiento 1: f(x) = 1000 + 25x, Estacionamiento 2: g(x) = p + 15x. ¿Cuál es el valor de p, considerando que ambos cobran lo mismo por 60 minutos?",
+                options: [
+                    { id: "A", text: "94" },
+                    { id: "B", text: "400" },
+                    { id: "C", text: "1600" },
+                    { id: "D", text: "2500" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 41,
+                text: "Si el área de un cuadrado es 144 cm², ¿cuál es la longitud de su diagonal?",
+                options: [
+                    { id: "A", text: "12 cm" },
+                    { id: "B", text: "12√2 cm" },
+                    { id: "C", text: "24 cm" },
+                    { id: "D", text: "24√2 cm" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 42,
+                text: "¿Cuál es el valor de x en la ecuación \\( 2^{x+3} = 16 \\)?",
+                options: [
+                    { id: "A", text: "1" },
+                    { id: "B", text: "2" },
+                    { id: "C", text: "3" },
+                    { id: "D", text: "4" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 43,
+                text: "Si un triángulo tiene lados de longitud 5 cm, 12 cm y 13 cm, ¿qué tipo de triángulo es?",
+                options: [
+                    { id: "A", text: "Equilátero" },
+                    { id: "B", text: "Isósceles" },
+                    { id: "C", text: "Escaleno" },
+                    { id: "D", text: "Rectángulo" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 44,
+                text: "¿Cuál es la solución de la ecuación \\( \\log_2(x) + \\log_2(x-2) = 3 \\)?",
+                options: [
+                    { id: "A", text: "2" },
+                    { id: "B", text: "4" },
+                    { id: "C", text: "6" },
+                    { id: "D", text: "8" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 45,
+                text: "Si f(x) = 3x² - 2x + 1, ¿cuál es el valor de f(-1)?",
+                options: [
+                    { id: "A", text: "0" },
+                    { id: "B", text: "2" },
+                    { id: "C", text: "4" },
+                    { id: "D", text: "6" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 46,
+                text: "¿Cuál es la probabilidad de obtener al menos un sello al lanzar dos monedas?",
+                options: [
+                    { id: "A", text: "1/4" },
+                    { id: "B", text: "1/2" },
+                    { id: "C", text: "3/4" },
+                    { id: "D", text: "1" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 47,
+                text: "Si sen(θ) = 3/5 y θ está en el primer cuadrante, ¿cuál es el valor de cos(θ)?",
+                options: [
+                    { id: "A", text: "2/5" },
+                    { id: "B", text: "3/5" },
+                    { id: "C", text: "4/5" },
+                    { id: "D", text: "5/4" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 48,
+                text: "¿Cuál es la derivada de f(x) = 4x³ - 3x² + 2x - 1?",
+                options: [
+                    { id: "A", text: "12x² - 6x + 2" },
+                    { id: "B", text: "12x² - 6x + 1" },
+                    { id: "C", text: "12x² - 3x + 2" },
+                    { id: "D", text: "4x² - 3x + 2" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 49,
+                text: "¿Cuál es el valor de la suma de los ángulos internos de un heptágono?",
+                options: [
+                    { id: "A", text: "720°" },
+                    { id: "B", text: "900°" },
+                    { id: "C", text: "1080°" },
+                    { id: "D", text: "1260°" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 50,
+                text: "Si a + b = 10 and a - b = 4, ¿cuál es el valor de a² - b²?",
+                options: [
+                    { id: "A", text: "14" },
+                    { id: "B", text: "20" },
+                    { id: "C", text: "40" },
+                    { id: "D", text: "100" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 51,
+                text: "¿Cuál es la solución del sistema de ecuaciones: 2x + y = 7, x - y = -1?",
+                options: [
+                    { id: "A", text: "x=1, y=5" },
+                    { id: "B", text: "x=2, y=3" },
+                    { id: "C", text: "x=3, y=1" },
+                    { id: "D", text: "x=4, y=-1" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 52,
+                text: "Si un círculo tiene un radio de 5 cm, ¿cuál es su circunferencia?",
+                options: [
+                    { id: "A", text: "5π cm" },
+                    { id: "B", text: "10π cm" },
+                    { id: "C", text: "15π cm" },
+                    { id: "D", text: "25π cm" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 53,
+                text: "¿Cuál es el valor de la mediana en el conjunto de datos: 3, 7, 2, 9, 5, 4, 8?",
+                options: [
+                    { id: "A", text: "4" },
+                    { id: "B", text: "5" },
+                    { id: "C", text: "6" },
+                    { id: "D", text: "7" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 54,
+                text: "Si un prisma rectangular tiene dimensiones 3 cm × 4 cm × 5 cm, ¿cuál es su volumen?",
+                options: [
+                    { id: "A", text: "12 cm³" },
+                    { id: "B", text: "47 cm³" },
+                    { id: "C", text: "60 cm³" },
+                    { id: "D", text: "94 cm³" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 55,
+                text: "¿Cuál es el valor de x en la proporción 3/5 = x/15?",
+                options: [
+                    { id: "A", text: "5" },
+                    { id: "B", text: "9" },
+                    { id: "C", text: "12" },
+                    { id: "D", text: "25" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 56,
+                text: "Si un artículo cuesta $1200 después de un descuento del 20%, ¿cuál era su precio original?",
+                options: [
+                    { id: "A", text: "$1400" },
+                    { id: "B", text: "$1500" },
+                    { id: "C", text: "$1600" },
+                    { id: "D", text: "$1800" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 57,
+                text: "¿Cuál es el resultado de (a + b)² - (a - b)²?",
+                options: [
+                    { id: "A", text: "2ab" },
+                    { id: "B", text: "4ab" },
+                    { id: "C", text: "a² + b²" },
+                    { id: "D", text: "2a² + 2b²" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 58,
+                text: "Si la pendiente de una recta es 2 y pasa por el punto (1, 3), ¿cuál es su ecuación?",
+                options: [
+                    { id: "A", text: "y = 2x + 1" },
+                    { id: "B", text: "y = 2x + 3" },
+                    { id: "C", text: "y = 2x - 1" },
+                    { id: "D", text: "y = 2x - 3" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 59,
+                text: "¿Cuál es el valor de la expresión \\( \\frac{\\sqrt{50} + \\sqrt{18}}{\\sqrt{2}} \\)?",
+                options: [
+                    { id: "A", text: "4" },
+                    { id: "B", text: "5" },
+                    { id: "C", text: "6" },
+                    { id: "D", text: "8" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: 60,
+                text: "Si un tanque de agua se llena en 6 horas con una llave, y se vacía en 8 horas con un desagüe, ¿cuánto tiempo tardará en llenarse si ambos están abiertos?",
+                options: [
+                    { id: "A", text: "12 horas" },
+                    { id: "B", text: "18 horas" },
+                    { id: "C", text: "24 horas" },
+                    { id: "D", text: "48 horas" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 61,
+                text: "¿Cuál es el valor de cot(45°)?",
+                options: [
+                    { id: "A", text: "0" },
+                    { id: "B", text: "1" },
+                    { id: "C", text: "√2" },
+                    { id: "D", text: "No definido" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 62,
+                text: "Si la media de 5 números es 12, y cuatro de ellos son 8, 10, 14 y 16, ¿cuál es el quinto número?",
+                options: [
+                    { id: "A", text: "10" },
+                    { id: "B", text: "12" },
+                    { id: "C", text: "14" },
+                    { id: "D", text: "16" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: 63,
+                text: "¿Cuál es el área de un triángulo equilátero con lado de longitud 6 cm?",
+                options: [
+                    { id: "A", text: "9√3 cm²" },
+                    { id: "B", text: "12 cm²" },
+                    { id: "C", text: "18 cm²" },
+                    { id: "D", text: "36 cm²" }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: 64,
+                text: "Si un número aumenta de 50 a 65, ¿cuál es el porcentaje de aumento?",
+                options: [
+                    { id: "A", text: "15%" },
+                    { id: "B", text: "25%" },
+                    { id: "C", text: "30%" },
+                    { id: "D", text: "35%" }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: 65,
+                text: "¿Cuál es el valor de la suma de las soluciones de la ecuación x² - 5x + 6 = 0?",
+                options: [
+                    { id: "A", text: "2" },
+                    { id: "B", text: "3" },
+                    { id: "C", text: "5" },
+                    { id: "D", text: "6" }
+                ],
+                correctAnswer: "C"
+            }
+        ];
+
+        // ----------------------------
+        // Estado y elementos DOM
+        // ----------------------------
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let timeLeft = 2 * 60 * 60 + 20 * 60; // 2 horas y 20 minutos en segundos
+        let timerInterval = null;
+        let testStarted = false;
+        let currentQuestions = [];
+
+        // Historial para evitar repetir preguntas entre intentos (persistente durante la sesión)
+        let usedQuestions = new Set();
+
+        // Elementos del DOM
+        const timerElement = document.getElementById('timer');
+        const startBtn = document.getElementById('startBtn');
+        const finishBtn = document.getElementById('finishBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const questionNumberElement = document.getElementById('current-number');
+        const questionStatusElement = document.getElementById('question-status');
+        const questionTextElement = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const questionGrid = document.getElementById('question-grid');
+        const progressText = document.getElementById('progress-text');
+        const progressFill = document.getElementById('progress-fill');
+        const resultsContainer = document.getElementById('results-container');
+        const scoreElement = document.getElementById('score');
+        const correctAnswersElement = document.getElementById('correct-answers');
+        const incorrectAnswersElement = document.getElementById('incorrect-answers');
+        const unansweredElement = document.getElementById('unanswered');
+        const reviewBtn = document.getElementById('reviewBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const markBtn = document.getElementById('markBtn');
+
+        // Chat elements
+        const chatContainer = document.getElementById('chatContainer');
+        const chatMinimized = document.getElementById('chatMinimized');
+        const chatToggle = document.getElementById('chatToggle');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+
+        // ----------------------------
+        // Selección de preguntas sin repetir
+        // ----------------------------
+        function selectRandomQuestions() {
+            // Filtramos preguntas disponibles (no usadas)
+            let available = allQuestions.filter(q => !usedQuestions.has(q.number));
+
+            // Si no hay suficientes preguntas nuevas para armar 65, reiniciamos el historial
+            if (available.length < 65) {
+                usedQuestions.clear();
+                available = [...allQuestions];
+            }
+
+            // Barajar y tomar 65
+            const shuffled = [...available].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 65);
+
+            // Registrar como usadas
+            selected.forEach(q => usedQuestions.add(q.number));
+
+            return selected;
+        }
+
+        // ----------------------------
+        // Mostrar pregunta y navegación
+        // ----------------------------
+        function safeEscapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function safeRenderTextWithLatex(text) {
+            if (!text) return '';
+            // Permitir conversión de saltos de línea y proteger HTML
+            // Mantener delimitadores LaTeX intactos para MathJax
+            let t = safeEscapeHtml(text);
+            t = t.replace(/\n/g, '<br/>');
+
+            // Restaurar backslashes de LaTeX escapados
+            t = t.replace(/\\\(/g, '\\(').replace(/\\\)/g, '\\)').replace(/\\\[/g, '\\[').replace(/\\\]/g, '\\]');
+            // Permitir $...$ y $$...$$ sin escapar
+            t = t.replace(/\$(\$?)([\s\S]*?)\1\$/g, function(_, d, content) {
+                return '$' + content + '$';
+            });
+            return t;
+        }
+
+        function showQuestion(index) {
+            currentQuestionIndex = index;
+            const question = currentQuestions[index];
+
+            questionNumberElement.textContent = index + 1;
+            questionStatusElement.textContent = (userAnswers[index] !== null && userAnswers[index] !== 'marked') ? 'Respondida' : 'Sin responder';
+
+            questionTextElement.innerHTML = safeRenderTextWithLatex(question.text);
+
+            optionsContainer.innerHTML = '';
+            question.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                if (userAnswers[index] === option.id) {
+                    optionElement.classList.add('selected');
+                }
+
+                optionElement.innerHTML = `
+                    <span class="option-label">${option.id}</span>
+                    <span>${safeEscapeHtml(option.text)}</span>
+                `;
+
+                optionElement.addEventListener('click', () => selectOption(option.id));
+                optionsContainer.appendChild(optionElement);
+            });
+
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === currentQuestions.length - 1;
+
+            // actualizar grid
+            const qButtons = questionGrid.querySelectorAll('.question-btn');
+            qButtons.forEach((btn, i) => {
+                btn.classList.remove('current', 'answered');
+                if (i === index) btn.classList.add('current');
+                if (userAnswers[i] !== null && userAnswers[i] !== 'marked') btn.classList.add('answered');
+            });
+
+            markBtn.textContent = userAnswers[index] === 'marked' ? 'Desmarcar revisión' : 'Marcar para revisar';
+
+            // MathJax typeset (si corresponde)
+            try {
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise([questionTextElement]).catch(()=>{});
+                }
+            } catch(e){}
+        }
+
+        function selectOption(optionId) {
+            userAnswers[currentQuestionIndex] = optionId;
+            showQuestion(currentQuestionIndex);
+            updateProgress();
+        }
+
+        function navigateToQuestion(index) {
+            if (index < 0 || index >= currentQuestions.length) return;
+            showQuestion(index);
+        }
+
+        function updateProgress() {
+            const answeredCount = userAnswers.filter(a => a !== null && a !== 'marked').length;
+            const progressPercentage = (answeredCount / currentQuestions.length) * 100;
+
+            progressText.textContent = `${answeredCount}/${currentQuestions.length}`;
+            progressFill.style.width = `${progressPercentage}%`;
+        }
+
+        // ----------------------------
+        // Temporizador
+        // ----------------------------
+        function startTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishTest();
+                }
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+        }
+
+        // ----------------------------
+        // Finalizar, reiniciar
+        // ----------------------------
+        function finishTest() {
+            clearInterval(timerInterval);
+
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unansweredCount = 0;
+
+            userAnswers.forEach((answer, index) => {
+                if (answer === null || answer === 'marked') {
+                    unansweredCount++;
+                } else if (answer === currentQuestions[index].correctAnswer) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            });
+
+            scoreElement.textContent = `${correctCount}/${currentQuestions.length}`;
+            correctAnswersElement.textContent = correctCount;
+            incorrectAnswersElement.textContent = incorrectCount;
+            unansweredElement.textContent = unansweredCount;
+
+            document.querySelector('.question-container').style.display = 'none';
+            resultsContainer.style.display = 'block';
+
+            finishBtn.disabled = true;
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        }
+
+        function restartTest() {
+            currentQuestionIndex = 0;
+            timeLeft = 2 * 60 * 60 + 20 * 60;
+            resultsContainer.style.display = 'none';
+            document.querySelector('.question-container').style.display = 'block';
+            initTest();
+        }
+
+        // ----------------------------
+        // Chat: render, seguridad y motor local
+        // ----------------------------
+        function addMessageToChat(content, sender, preferHTML=false) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${sender}`;
+
+            if (preferHTML) {
+                messageElement.innerHTML = content;
+            } else {
+                messageElement.innerHTML = safeRenderTextWithLatex(content);
+            }
+
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+
+            // MathJax for the new message
+            try {
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise([messageElement]).catch(()=>{});
+                }
+            } catch(e){}
+        }
+
+        function showTypingIndicator() {
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator';
+            indicator.id = 'typingIndicator';
+            indicator.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatMessages.appendChild(indicator);
+            chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' });
+        }
+
+        function removeTypingIndicator() {
+            const ind = document.getElementById('typingIndicator');
+            if (ind) ind.remove();
+        }
+
+        // Sanitización y utilidades para el motor local
+        function escapeMathForLatex(str) {
+            return String(str).replace(/([#$%&~_^{}\\])/g, '\\$1');
+        }
+
+        // Intento de resolver expresiones aritméticas usando math.js
+        function trySolveArithmetic(raw) {
+            try {
+                let expr = raw.trim();
+
+                // Extraer caracteres válidos para expresión matemática
+                const matches = raw.match(/[-+()0-9/*^%.√,]+/g);
+                if (matches && matches.length) {
+                    expr = matches.join('');
+                } else {
+                    expr = raw;
+                }
+
+                // Limpiar y normalizar
+                expr = expr.replace(/,(\d+)/g, '.$1'); // coma decimal -> punto
+                expr = expr.replace(/%/g, '/100'); // porcentaje
+                expr = expr.replace(/√/g, 'sqrt'); // raíz
+
+                // Solo permitir caracteres seguros
+                if (!/^[0-9+\-*/^().,sqrt%]+$/.test(expr)) return null;
+
+                const result = math.evaluate(expr);
+                const explanation = `Evalué la expresión \\(${escapeMathForLatex(expr)}\\) y obtuve \\(${escapeMathForLatex(String(result))}\\).`;
+                return { result, explanation };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Intento de resolver ecuaciones lineales en formato ax + b = c
+        function trySolveLinearEquation(raw) {
+            const eq = raw.replace(/\s+/g, '').replace(/\\\(|\\\)/g,'');
+            const m = eq.match(/^([+\-]?\d*)x([+\-]\d+)?=([+\-]?\d+)$/i);
+            if (!m) return null;
+            try {
+                const aStr = m[1];
+                let a = aStr === '' || aStr === '+' ? 1 : (aStr === '-' ? -1 : parseFloat(aStr));
+                const b = m[2] ? parseFloat(m[2]) : 0;
+                const c = parseFloat(m[3]);
+                const x = (c - b) / a;
+                const explan = `Ecuación: \\(${a}x ${b>=0?'+':'-'} ${Math.abs(b)} = ${c}\\). Resolviendo: \\(x = \\frac{${c} - (${b})}{${a}} = ${x}\\).`;
+                return { x, explan };
+            } catch(e) { return null; }
+        }
+
+        async function generateAIResponseLocal(userMessage) {
+            await new Promise(r => setTimeout(r, 300 + Math.random()*400));
+
+            const lin = trySolveLinearEquation(userMessage);
+            if (lin) {
+                return `Voy a resolver la ecuación paso a paso:\n\n${lin.explan}\n\nRespuesta: \\(${escapeMathForLatex(String(lin.x))}\\)`;
+            }
+
+            const ar = trySolveArithmetic(userMessage);
+            if (ar) {
+                return `Procedimiento (resumen):\n\n${ar.explanation}\n\nSi quieres, puedo mostrar un desglose paso a paso por operaciones (paréntesis → potencias → multiplicación/división → suma/resta).`;
+            }
+
+            const lower = userMessage.toLowerCase();
+            if (lower.includes('consejo') || lower.includes('estrateg') || lower.includes('estudi')) {
+                return "Consejos rápidos para la PAES:\n\n1) Lee la pregunta completa y subraya datos.\n2) Empieza por las preguntas que te toman menos tiempo.\n3) Si no sabes una respuesta, márcala y continúa: no hay penalización.\n4) Revisa tus cálculos con estimaciones rápidas.\n\n¿Quieres que te dé un plan de estudio semanal?";
+            }
+
+            if (lower.includes('paso') || lower.includes('explica') || lower.includes('resolver')) {
+                return "Puedo explicar problemas matemáticos paso a paso. Escribe la ecuación o expresión exacta (ej. `resolver 2x+3=11` o `(3+5)*2`).";
+            }
+
+            return "No identifiqué claramente la operación. Puedes:\n- Escribir una expresión matemática (ej. `(3+5)*2`).\n- Escribir una ecuación lineal (ej. `2x+3=11`).\n- Pedir consejos de estudio (ej. `consejos PAES`).";
+        }
+
+        // ----------------------------
+        // Envío de mensajes (usa motor local)
+        // ----------------------------
+        async function sendMessageToAI(message) {
+            addMessageToChat(message, 'user', false);
+            showTypingIndicator();
+
+            let reply;
+            try {
+                reply = await generateAIResponseLocal(message);
+            } catch (e) {
+                reply = "Hubo un error interno al generar la respuesta. Intenta de nuevo.";
+            }
+
+            removeTypingIndicator();
+            addMessageToChat(reply, 'bot', false);
+        }
+
+        // ----------------------------
+        // Listeners y manejo UI
+        // ----------------------------
+        startBtn.addEventListener('click', initTest);
+        finishBtn.addEventListener('click', finishTest);
+        prevBtn.addEventListener('click', () => navigateToQuestion(currentQuestionIndex - 1));
+        nextBtn.addEventListener('click', () => navigateToQuestion(currentQuestionIndex + 1));
+        restartBtn.addEventListener('click', restartTest);
+        markBtn.addEventListener('click', () => {
+            if (userAnswers[currentQuestionIndex] === 'marked') {
+                userAnswers[currentQuestionIndex] = null;
+            } else {
+                userAnswers[currentQuestionIndex] = 'marked';
+            }
+            showQuestion(currentQuestionIndex);
+            updateProgress();
+        });
+
+        chatMinimized.addEventListener('click', () => {
+            chatMinimized.style.display = 'none';
+            chatContainer.style.display = 'flex';
+            setTimeout(() => chatInput.focus(), 120);
+        });
+
+        chatToggle.addEventListener('click', () => {
+            chatContainer.style.display = 'none';
+            chatMinimized.style.display = 'flex';
+        });
+
+        chatSend.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if (message) {
+                chatInput.value = '';
+                sendMessageToAI(message);
+            }
+        });
+
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                chatSend.click();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                if (chatContainer.style.display !== 'none') {
+                    chatSend.click();
+                }
+            }
+        });
+
+        // ----------------------------
+        // Inicialización
+        // ----------------------------
+        function initTest() {
+            currentQuestions = selectRandomQuestions();
+            userAnswers = new Array(currentQuestions.length).fill(null);
+
+            // crear botones de preguntas
+            questionGrid.innerHTML = '';
+            currentQuestions.forEach((question, index) => {
+                const button = document.createElement('button');
+                button.className = 'question-btn';
+                button.textContent = index + 1;
+                button.addEventListener('click', () => navigateToQuestion(index));
+                questionGrid.appendChild(button);
+            });
+
+            showQuestion(0);
+            startTimer();
+            startBtn.disabled = true;
+            finishBtn.disabled = false;
+            testStarted = true;
+            updateProgress();
+        }
+
+        // Forzar MathJax inicial al cargar
+        window.addEventListener('load', () => {
+            try {
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise();
+                }
+            } catch(e){}
+            chatMinimized.style.display = 'flex';
+            updateTimerDisplay();
+        });
+    </script>
+</body>
+</html>
