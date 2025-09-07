@@ -1,0 +1,35 @@
+{
+  "name": "simulador-paes-matematicas",
+  "version": "1.0.0",
+  "description": "Simulador de la Prueba de Acceso a la Educación Superior (PAES) para Competencia Matemática 1",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=3000 --open=/",
+    "dev": "live-server --port=3000 --open=/ --watch=index.html,styles.css,script.js,questions.js",
+    "build": "echo 'No se requiere proceso de build para este proyecto estático'",
+    "test": "echo 'No hay tests configurados' && exit 0"
+  },
+  "keywords": [
+    "paes",
+    "simulador",
+    "matemáticas",
+    "educación",
+    "chile",
+    "prueba",
+    "acceso",
+    "universidad"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/simulador-paes-matematicas.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tu-usuario/simulador-paes-matematicas/issues"
+  },
+  "homepage": "https://github.com/tu-usuario/simulador-paes-matematicas#readme"
+}
