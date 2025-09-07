@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador PAES - Competencia Matemática 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">PAES</div>
+                <div>
+                    <h1>Simulador PAES - Competencia Matemática 1</h1>
+                    <p class="subtitle">Forma 111 - Proceso de Admisión 2025</p>
+                </div>
+            </div>
+        </header>
+        
+        <div class="instructions">
+            <h2>Instrucciones</h2>
+            <ul class="instructions-list">
+                <li>Esta prueba contiene 65 preguntas, pero solo 60 serán consideradas para el cálculo del puntaje final.</li>
+                <li>Cada pregunta tiene 4 opciones de respuesta (A, B, C y D), donde solo una es correcta.</li>
+                <li>Dispones de 2 horas y 20 minutos para responder las preguntas.</li>
+                <li>No se descuenta puntaje por respuestas erradas.</li>
+                <li>Puedes navegar entre preguntas y marcar tus respuestas. Al finalizar, podrás ver tu puntaje.</li>
+            </ul>
+        </div>
+        
+        <div class="test-controls">
+            <div class="timer-container">
+                <span>Tiempo restante:</span>
+                <div class="timer" id="timer">02:20:00</div>
+            </div>
+            <div>
+                <button class="btn btn-primary" id="startBtn">Iniciar simulacro</button>
+                <button class="btn btn-success" id="finishBtn" disabled>Finalizar prueba</button>
+            </div>
+        </div>
+        
+        <div class="test-content">
+            <div class="main-content">
+                <div class="question-container">
+                    <div class="question-header">
+                        <div class="question-number">Pregunta <span id="current-number">1</span> de 65</div>
+                        <div class="question-status" id="question-status">Sin responder</div>
+                    </div>
+                    
+                    <div class="question-text" id="question-text">
+                        Selecciona "Iniciar simulacro" para comenzar con la prueba.
+                    </div>
+                    
+                    <div class="options-container" id="options-container"></div>
+                    
+                    <div class="navigation-buttons">
+                        <button class="btn btn-secondary" id="prevBtn" disabled>Anterior</button>
+                        <button class="btn btn-secondary" id="nextBtn">Siguiente</button>
+                    </div>
+                </div>
+                
+                <div class="results-container" id="results-container">
+                    <h2>Resultados del Simulacro</h2>
+                    <p>Has completado la prueba de Competencia Matemática 1</p>
+                    <div class="score" id="score">0/65</div>
+                    
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-number" id="correct-answers">0</div>
+                            <div class="stat-label">Correctas</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="incorrect-answers">0</div>
+                            <div class="stat-label">Incorrectas</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="unanswered">65</div>
+                            <div class="stat-label">Sin responder</div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary review-btn" id="reviewBtn">Revisar respuestas</button>
+                    <button class="btn btn-secondary" id="restartBtn">Intentar de nuevo</button>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <h3>Navegación de preguntas</h3>
+                <div class="question-grid" id="question-grid"></div>
+                
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span>Progreso</span>
+                        <span id="progress-text">0/65</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-warning" id="markBtn">Marcar para revisar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-minimized" id="chatMinimized">💬</div>
+    <div class="chat-container" id="chatContainer" style="display: none;">
+        <div class="chat-header">
+            <h3>Asistente PAES - IA</h3>
+            <button class="chat-toggle" id="chatToggle">−</button>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-container">
+            <textarea id="chatInput" class="chat-input" placeholder="Escribe tu pregunta..."></textarea>
+            <button class="chat-send" id="chatSend">Enviar</button>
+        </div>
+    </div>
+
+    <!-- MathJax y Math.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
